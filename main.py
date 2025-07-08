@@ -7,12 +7,8 @@ from asteroid import Asteroid
 update_sprites = pygame.sprite.Group()
 draw_sprites = pygame.sprite.Group()
 asteroid_group = pygame.sprite.Group()
-
-# Set containers for Player and Asteroid classes
 Player.containers = (update_sprites, draw_sprites)
 Asteroid.containers = (update_sprites, draw_sprites, asteroid_group)
-
-# Set containers for AsteroidField
 AsteroidField.containers = (update_sprites,)
 
 
@@ -22,10 +18,9 @@ def main():
     screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0
-    # Create AsteroidField instance
+
     asteroids = AsteroidField()
     
-    # Create Player instance
     player = Player(
         constants.SCREEN_WIDTH // 2,
         constants.SCREEN_HEIGHT // 2,
@@ -39,6 +34,11 @@ def main():
         for sprite in draw_sprites:
             sprite.draw(screen)
         update_sprites.update(dt)
+        for asteroid in asteroid_group:
+            if player.collision(asteroid):
+                print("Game Over")
+                pygame.quit()
+                return
         pygame.display.flip()
         dt = clock.tick(60) / 1000
 
